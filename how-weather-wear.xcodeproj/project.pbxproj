@@ -18,6 +18,8 @@
 		C47479DD2C22D76A00D421D7 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = C47479DC2C22D76A00D421D7 /* SnapKit */; };
 		C47479E02C22D77800D421D7 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = C47479DF2C22D77800D421D7 /* Kingfisher */; };
 		C47479E22C22DBF000D421D7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47479E12C22DBF000D421D7 /* Constants.swift */; };
+		C47479E52C23073400D421D7 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = C47479E42C23073400D421D7 /* Alamofire */; };
+		C47479E82C2308F800D421D7 /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47479E72C2308F800D421D7 /* Weather.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +35,7 @@
 		C47479D42C22CC7C00D421D7 /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		C47479D92C22D6A000D421D7 /* Resource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resource.swift; sourceTree = "<group>"; };
 		C47479E12C22DBF000D421D7 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		C47479E72C2308F800D421D7 /* Weather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C47479E52C23073400D421D7 /* Alamofire in Frameworks */,
 				C47479E02C22D77800D421D7 /* Kingfisher in Frameworks */,
 				C47479DD2C22D76A00D421D7 /* SnapKit in Frameworks */,
 			);
@@ -69,6 +73,7 @@
 		C47479BB2C22C1A800D421D7 /* how-weather-wear */ = {
 			isa = PBXGroup;
 			children = (
+				C47479E62C2308EE00D421D7 /* Model */,
 				C47479D32C22CC6F00D421D7 /* API */,
 				C47479D62C22CDAB00D421D7 /* Controllers */,
 				C47479D82C22D68A00D421D7 /* Common */,
@@ -106,6 +111,14 @@
 			path = Common;
 			sourceTree = "<group>";
 		};
+		C47479E62C2308EE00D421D7 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				C47479E72C2308F800D421D7 /* Weather.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -125,6 +138,7 @@
 			packageProductDependencies = (
 				C47479DC2C22D76A00D421D7 /* SnapKit */,
 				C47479DF2C22D77800D421D7 /* Kingfisher */,
+				C47479E42C23073400D421D7 /* Alamofire */,
 			);
 			productName = "how-weather-wear";
 			productReference = C47479B92C22C1A800D421D7 /* how-weather-wear.app */;
@@ -157,6 +171,7 @@
 			packageReferences = (
 				C47479DB2C22D76A00D421D7 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				C47479DE2C22D77800D421D7 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				C47479E32C23073400D421D7 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = C47479BA2C22C1A800D421D7 /* Products */;
 			projectDirPath = "";
@@ -185,6 +200,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C47479E82C2308F800D421D7 /* Weather.swift in Sources */,
 				C47479C12C22C1A800D421D7 /* MainViewController.swift in Sources */,
 				C47479BD2C22C1A800D421D7 /* AppDelegate.swift in Sources */,
 				C47479D52C22CC7C00D421D7 /* API.swift in Sources */,
@@ -431,6 +447,14 @@
 				minimumVersion = 7.12.0;
 			};
 		};
+		C47479E32C23073400D421D7 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.9.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -443,6 +467,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C47479DE2C22D77800D421D7 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		C47479E42C23073400D421D7 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C47479E32C23073400D421D7 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
