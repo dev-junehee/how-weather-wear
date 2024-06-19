@@ -27,12 +27,17 @@ class MainViewController: UIViewController {
     let mapLabel = UILabel()
     let mapView = MKMapView()
 
+    let locationManager = CLLocationManager()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        checkDeviceLocationAuthorization()
         
         configureHierarchy()
         configureLayout()
         configureUI()
+//        configureData()
     }
     
     private func configureHierarchy() {
@@ -53,6 +58,8 @@ class MainViewController: UIViewController {
         subViews.forEach {
             view.addSubview($0)
         }
+        
+        locationManager.delegate = self
     }
     
     private func configureLayout() {
@@ -185,8 +192,14 @@ class MainViewController: UIViewController {
         mapView.layer.cornerRadius = 5
     }
     
+    // 현재 위치로 날씨 데이터 받기
+//    private func configureData() {
+//        
+//    }
+    
+    
     // 배경 흐림 설정
-    func setBlurEffect(blurEffect: UIBlurEffect.Style, target: UIView) {
+    private func setBlurEffect(blurEffect: UIBlurEffect.Style, target: UIView) {
         let blurEffect = UIBlurEffect(style: blurEffect)
         let effectView = UIVisualEffectView(effect: blurEffect)
         effectView.frame = view.bounds
@@ -194,3 +207,93 @@ class MainViewController: UIViewController {
     }
 }
 
+
+// MARK: 권한 요청
+extension MainViewController {
+    /// 기기 위치 서비스 활성화 여부 체크 함수
+    /// if-활성화 else-비활성화
+    func checkDeviceLocationAuthorization() {
+        if CLLocationManager.locationServicesEnabled() {
+            /// 활성화되어 있는 경우 위치 권한 상태 체크 함수 실행
+            checkCurrentLocatioinAuthorization()
+        } else {
+            print("위치 서비스가 활성화되어있지 않아, 위치 권한을 요청할 수 없어요.")
+        }
+    }
+    
+    /// 사용자의 위치 권한 상태 체크 함수
+    func checkCurrentLocatioinAuthorization() {
+        var status: CLAuthorizationStatus
+        
+        /// iOS 14 이전 버전 대응
+        if #available(iOS 14.0, *) {
+            status = locationManager.authorizationStatus
+        } else {
+            status = CLLocationManager.authorizationStatus()
+        }
+        
+        /// 권한 상태별 핸들링
+        /// notDetermined:
+        switch status {
+        case .notDetermined:
+            print(status)
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.requestWhenInUseAuthorization()
+            
+        case .restricted:
+            print(status)
+
+        case .denied:
+            print(status)
+
+        case .authorizedAlways:
+            print(status)
+
+        case .authorizedWhenInUse:
+            print(status)
+            locationManager.startUpdatingLocation()   // didUpdateLocations 연결
+            
+        case .authorized:
+            print(status)
+
+        @unknown default:
+            print(status)
+
+        }
+    }
+    
+    // 지도에 현재 위치 표시
+    func setRegionAndAnnotation(center: CLLocationCoordinate2D) {
+        let region = MKCoordinateRegion(center: center, latitudinalMeters: 500, longitudinalMeters: 500)
+        mapView.setRegion(region, animated: true)
+    }
+}
+
+
+// MARK: CLLocationManagerDelegate
+extension MainViewController: CLLocationManagerDelegate {
+    /// 사용자 위치를 성공적으로 가지고 온 경우
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let coordinate = locations.last?.coordinate {
+            setRegionAndAnnotation(center: coordinate)  // 지도에 위도.경도 세팅
+        }
+        
+        locationManager.stopUpdatingLocation()
+    }
+    
+    /// 사용자 위치를 가지고 오지 못한 경우
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: any Error) {
+        print("위치를 가져올 수 없어요. 다시 시도해 주세요.")
+    }
+    
+    /// 사용자의 권한 상태가 변경되었을 경우
+    /// iOS 14 이상
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        checkDeviceLocationAuthorization()
+    }
+    
+    /// iOS 14 이전
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        checkDeviceLocationAuthorization()
+    }
+}
