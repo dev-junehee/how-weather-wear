@@ -13,7 +13,7 @@ enum Constants {
         
         enum Main {
             static let title = "나의 위치"
-            
+            static let mapLabel = "현재 위치"
         }
         
     }
