@@ -132,63 +132,33 @@ class MainViewController: UIViewController {
         setBlurEffect(blurEffect: .light, target: background)
         
         // 메인 레이블
-        titleLabel.text = "나의 위치"
-        titleLabel.textColor = .white
-        titleLabel.textAlignment = .center
-        titleLabel.font = .systemFont(ofSize: 32, weight: .light)
-        titleLabel.layer.shadowOffset = CGSize(width: 2, height: 2)
-        titleLabel.layer.shadowOpacity = 0.3
-        titleLabel.layer.shadowRadius = 1
+        titleLabel.text = Constants.Text.Main.title
+        titleLabel.setShadowText(color: Resource.Colors.white, size: 32, weight: .light)
         
         // 위치 레이블
-        locationLabel.textColor = .white
-        locationLabel.textAlignment = .center
-        locationLabel.font = .systemFont(ofSize: 16, weight: .semibold)
-        locationLabel.layer.shadowOffset = CGSize(width: 2, height: 2)
-        locationLabel.layer.shadowOpacity = 0.3
-        locationLabel.layer.shadowRadius = 1
+        locationLabel.setShadowText(color: Resource.Colors.white, size: 16, weight: .semibold)
         
         // 현재온도 레이블
-//        tempLabel.text = "32º"
-        tempLabel.textColor = .white
-        tempLabel.textAlignment = .center
-        tempLabel.font = .systemFont(ofSize: 100, weight: .ultraLight)
-        tempLabel.layer.shadowOffset = CGSize(width: 2, height: 2)
-        tempLabel.layer.shadowOpacity = 0.3
-        tempLabel.layer.shadowRadius = 1
+        tempLabel.setShadowText(color: Resource.Colors.white, size: 100, weight: .ultraLight)
         
         // 최고+최저온도, 아이콘 스택
-        subInfoStack.backgroundColor = .init(_colorLiteralRed: 1, green: 1, blue: 1, alpha: 0.5)
-        subInfoStack.isOpaque = true
-        subInfoStack.clipsToBounds = true
-        subInfoStack.layer.cornerRadius = 10
+        subInfoStack.setWhiteTransparentBackground()
         
         // 최고+최저온도 레이블
         tempMaxMinLabel.numberOfLines = 0
-//        tempMaxMinLabel.text = "오늘 최고 기온은 32º\n최저 기온은 32º 입니다"
-        tempMaxMinLabel.textColor = .white
-        tempMaxMinLabel.textAlignment = .center
-        tempMaxMinLabel.font = .systemFont(ofSize: 16, weight: .light)
-        tempMaxMinLabel.layer.shadowOffset = CGSize(width: 2, height: 2)
-        tempMaxMinLabel.layer.shadowOpacity = 0.5
-        tempMaxMinLabel.layer.shadowRadius = 1
+        tempMaxMinLabel.setText(color: Resource.Colors.darkGray, size: 16, weight: .medium)
         
         // 아이콘 이미지
-        icon.backgroundColor = .white
+        icon.backgroundColor = Resource.Colors.white
         icon.contentMode = .scaleAspectFit
-//        let iconImage = URL(string: "https://openweathermap.org/img/wn/10d@2x.png")
-//        icon.kf.setImage(with: iconImage)
         
         // 지도 백그라운드 뷰
-        mapBackgroundView.backgroundColor = .init(_colorLiteralRed: 1, green: 1, blue: 1, alpha: 0.5)
-        mapBackgroundView.isOpaque = true
-        mapBackgroundView.clipsToBounds = true
-        mapBackgroundView.layer.cornerRadius = 10
+        mapBackgroundView.setWhiteTransparentBackground()
         
-        // 지도 텍스트
-        mapLabel.text = "현재 위치"
-        mapLabel.font = .systemFont(ofSize: 14, weight: .bold)
-        mapLabel.textColor = .lightGray
+        // 지도 뷰 타이틀 텍스트
+        mapLabel.text = Constants.Text.Main.mapLabel
+        mapLabel.font = Resource.Fonts.bold14
+        mapLabel.textColor = Resource.Colors.lightGray
         
         // 지도
         mapView.layer.cornerRadius = 5
@@ -196,8 +166,8 @@ class MainViewController: UIViewController {
     
     // 현재 위치로 날씨 데이터 받기
     private func configureData(data: WeatherResult) {
-        tempLabel.text = "\(data.main.temp)º"
-        tempMaxMinLabel.text = "오늘 최고 기온은 \(data.main.temp_max)º\n최저 기온은 \(data.main.temp_min)º 입니다"
+        tempLabel.text = "\(Int(data.main.temp))º"
+        tempMaxMinLabel.text = "오늘 최고 기온은 \(getFormattedDoubleToString(data.main.temp_max))º\n최저 기온은 \(getFormattedDoubleToString(data.main.temp_min))º 입니다"
         let iconImage = URL(string: "\(API.Weather.IMG)\(data.weather[0].icon)@2x.png")
         self.icon.kf.setImage(with: iconImage)
     }
@@ -275,23 +245,22 @@ extension MainViewController {
     
     // OpenWeather API
     func callRequest(coordinate: CLLocationCoordinate2D) {
-        let iconImage: URL
         let URL = "\(API.Weather.URL)appid=\(API.Weather.KEY)&lat=\(coordinate.latitude)&lon=\(coordinate.longitude)"
         
         AF.request(URL).responseDecodable(of: WeatherResult.self) { res in
             switch res.result {
             case .success(let value):
-                dump(value)
                 self.configureData(data: value)
             case .failure(let error):
+                print("네트워크 통신 오류")
                 print(error)
             }
         }
-        
-//        AF.request(URL)
-//            .responseString { res in
-//                dump(res.result)
-//            }
+    }
+    
+    // 소수점 2번째 자리에서 반올림
+    func getFormattedDoubleToString(_ value: Double) -> String {
+        return String(format: "%.1f", value)
     }
 }
 
@@ -304,7 +273,6 @@ extension MainViewController: CLLocationManagerDelegate {
             // 현재 위치 주소 받아오기 (e.g. "00시, 00구")
             let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
             let geocoder = CLGeocoder()
-            let locale = Locale(identifier: "Ko-kr")
             
             geocoder.reverseGeocodeLocation(location) { (placemarks, error) in
                 if error != nil {
