@@ -60,6 +60,9 @@ class MainViewController: UIViewController {
         }
         
         locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        
+        mapView.delegate = self
     }
     
     private func configureLayout() {
@@ -138,7 +141,7 @@ class MainViewController: UIViewController {
         titleLabel.layer.shadowRadius = 1
         
         // 위치 레이블
-        locationLabel.text = "서울특별시, 중구"
+//        locationLabel.text = "서울특별시, 중구"
         locationLabel.textColor = .white
         locationLabel.textAlignment = .center
         locationLabel.font = .systemFont(ofSize: 16, weight: .semibold)
@@ -193,9 +196,9 @@ class MainViewController: UIViewController {
     }
     
     // 현재 위치로 날씨 데이터 받기
-//    private func configureData() {
-//        
-//    }
+    private func configureData() {
+        
+    }
     
     
     // 배경 흐림 설정
@@ -275,7 +278,27 @@ extension MainViewController: CLLocationManagerDelegate {
     /// 사용자 위치를 성공적으로 가지고 온 경우
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let coordinate = locations.last?.coordinate {
-            setRegionAndAnnotation(center: coordinate)  // 지도에 위도.경도 세팅
+            // 현재 위치 주소 받아오기 (e.g. "00시, 00구")
+            let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+            let geocoder = CLGeocoder()
+            let locale = Locale(identifier: "Ko-kr")
+            
+            geocoder.reverseGeocodeLocation(location) { (placemarks, error) in
+                if error != nil {
+                    print("현재 위치 주소를 가져오지 못했어요.")
+                    return
+                }
+                
+                guard let city = placemarks?.first?.administrativeArea,
+                      let subLocality = placemarks?.first?.subLocality else {
+                    print("placemarks 주소 정보 오류")
+                    return
+                }
+                self.locationLabel.text = "\(city), \(subLocality)"
+            }
+            
+            // 지도에 위도.경도 세팅
+            setRegionAndAnnotation(center: coordinate)
         }
         
         locationManager.stopUpdatingLocation()
@@ -295,5 +318,14 @@ extension MainViewController: CLLocationManagerDelegate {
     /// iOS 14 이전
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         checkDeviceLocationAuthorization()
+    }
+}
+
+
+// MARK: MapViewDelegate
+extension MainViewController: MKMapViewDelegate {
+    // 지도에서 위치가 움직일 때 데이터 재조정
+    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        print(#function, "위치가 변경됐어요.")
     }
 }
