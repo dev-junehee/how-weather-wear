@@ -8,6 +8,7 @@
 import UIKit
 import MapKit
 
+import Alamofire
 import Kingfisher
 import SnapKit
 
@@ -37,7 +38,6 @@ class MainViewController: UIViewController {
         configureHierarchy()
         configureLayout()
         configureUI()
-//        configureData()
     }
     
     private func configureHierarchy() {
@@ -60,6 +60,9 @@ class MainViewController: UIViewController {
         }
         
         locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        
+        mapView.delegate = self
     }
     
     private func configureLayout() {
@@ -138,7 +141,6 @@ class MainViewController: UIViewController {
         titleLabel.layer.shadowRadius = 1
         
         // 위치 레이블
-        locationLabel.text = "서울특별시, 중구"
         locationLabel.textColor = .white
         locationLabel.textAlignment = .center
         locationLabel.font = .systemFont(ofSize: 16, weight: .semibold)
@@ -147,7 +149,7 @@ class MainViewController: UIViewController {
         locationLabel.layer.shadowRadius = 1
         
         // 현재온도 레이블
-        tempLabel.text = "32º"
+//        tempLabel.text = "32º"
         tempLabel.textColor = .white
         tempLabel.textAlignment = .center
         tempLabel.font = .systemFont(ofSize: 100, weight: .ultraLight)
@@ -163,7 +165,7 @@ class MainViewController: UIViewController {
         
         // 최고+최저온도 레이블
         tempMaxMinLabel.numberOfLines = 0
-        tempMaxMinLabel.text = "오늘 최고 기온은 32º\n최저 기온은 32º 입니다"
+//        tempMaxMinLabel.text = "오늘 최고 기온은 32º\n최저 기온은 32º 입니다"
         tempMaxMinLabel.textColor = .white
         tempMaxMinLabel.textAlignment = .center
         tempMaxMinLabel.font = .systemFont(ofSize: 16, weight: .light)
@@ -174,8 +176,8 @@ class MainViewController: UIViewController {
         // 아이콘 이미지
         icon.backgroundColor = .white
         icon.contentMode = .scaleAspectFit
-        let iconImage = URL(string: "https://openweathermap.org/img/wn/10d@2x.png")
-        icon.kf.setImage(with: iconImage)
+//        let iconImage = URL(string: "https://openweathermap.org/img/wn/10d@2x.png")
+//        icon.kf.setImage(with: iconImage)
         
         // 지도 백그라운드 뷰
         mapBackgroundView.backgroundColor = .init(_colorLiteralRed: 1, green: 1, blue: 1, alpha: 0.5)
@@ -193,9 +195,12 @@ class MainViewController: UIViewController {
     }
     
     // 현재 위치로 날씨 데이터 받기
-//    private func configureData() {
-//        
-//    }
+    private func configureData(data: WeatherResult) {
+        tempLabel.text = "\(data.main.temp)º"
+        tempMaxMinLabel.text = "오늘 최고 기온은 \(data.main.temp_max)º\n최저 기온은 \(data.main.temp_min)º 입니다"
+        let iconImage = URL(string: "\(API.Weather.IMG)\(data.weather[0].icon)@2x.png")
+        self.icon.kf.setImage(with: iconImage)
+    }
     
     
     // 배경 흐림 설정
@@ -267,6 +272,27 @@ extension MainViewController {
         let region = MKCoordinateRegion(center: center, latitudinalMeters: 500, longitudinalMeters: 500)
         mapView.setRegion(region, animated: true)
     }
+    
+    // OpenWeather API
+    func callRequest(coordinate: CLLocationCoordinate2D) {
+        let iconImage: URL
+        let URL = "\(API.Weather.URL)appid=\(API.Weather.KEY)&lat=\(coordinate.latitude)&lon=\(coordinate.longitude)"
+        
+        AF.request(URL).responseDecodable(of: WeatherResult.self) { res in
+            switch res.result {
+            case .success(let value):
+                dump(value)
+                self.configureData(data: value)
+            case .failure(let error):
+                print(error)
+            }
+        }
+        
+//        AF.request(URL)
+//            .responseString { res in
+//                dump(res.result)
+//            }
+    }
 }
 
 
@@ -275,7 +301,28 @@ extension MainViewController: CLLocationManagerDelegate {
     /// 사용자 위치를 성공적으로 가지고 온 경우
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let coordinate = locations.last?.coordinate {
-            setRegionAndAnnotation(center: coordinate)  // 지도에 위도.경도 세팅
+            // 현재 위치 주소 받아오기 (e.g. "00시, 00구")
+            let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+            let geocoder = CLGeocoder()
+            let locale = Locale(identifier: "Ko-kr")
+            
+            geocoder.reverseGeocodeLocation(location) { (placemarks, error) in
+                if error != nil {
+                    print("현재 위치 주소를 가져오지 못했어요.")
+                    return
+                }
+                
+                guard let city = placemarks?.first?.administrativeArea,
+                      let subLocality = placemarks?.first?.subLocality else {
+                    print("placemarks 주소 정보 오류")
+                    return
+                }
+                self.locationLabel.text = "\(city), \(subLocality)"
+            }
+            
+            // 지도에 위도.경도 세팅
+            setRegionAndAnnotation(center: coordinate)
+            callRequest(coordinate: coordinate)
         }
         
         locationManager.stopUpdatingLocation()
@@ -295,5 +342,14 @@ extension MainViewController: CLLocationManagerDelegate {
     /// iOS 14 이전
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         checkDeviceLocationAuthorization()
+    }
+}
+
+
+// MARK: MapViewDelegate
+extension MainViewController: MKMapViewDelegate {
+    // 지도에서 위치가 움직일 때 데이터 재조정
+    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        print(#function, "위치가 변경됐어요.")
     }
 }
