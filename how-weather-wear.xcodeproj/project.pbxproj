@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C44DDC652C42B1230019E549 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C44DDC642C42B1230019E549 /* MainView.swift */; };
 		C47479BD2C22C1A800D421D7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47479BC2C22C1A800D421D7 /* AppDelegate.swift */; };
 		C47479BF2C22C1A800D421D7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47479BE2C22C1A800D421D7 /* SceneDelegate.swift */; };
 		C47479C12C22C1A800D421D7 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47479C02C22C1A800D421D7 /* MainViewController.swift */; };
@@ -25,6 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C44DDC642C42B1230019E549 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		C47479B92C22C1A800D421D7 /* how-weather-wear.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "how-weather-wear.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C47479BC2C22C1A800D421D7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C47479BE2C22C1A800D421D7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -55,6 +57,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C44DDC632C42AFCD0019E549 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				C47479BC2C22C1A800D421D7 /* AppDelegate.swift */,
+				C47479BE2C22C1A800D421D7 /* SceneDelegate.swift */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		C44DDC662C42B1260019E549 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				C47479C02C22C1A800D421D7 /* MainViewController.swift */,
+				C44DDC642C42B1230019E549 /* MainView.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
 		C47479B02C22C1A800D421D7 = {
 			isa = PBXGroup;
 			children = (
@@ -75,13 +95,12 @@
 		C47479BB2C22C1A800D421D7 /* how-weather-wear */ = {
 			isa = PBXGroup;
 			children = (
+				C44DDC632C42AFCD0019E549 /* Application */,
 				C47479E62C2308EE00D421D7 /* Model */,
 				C47479D32C22CC6F00D421D7 /* API */,
 				C47479D82C22D68A00D421D7 /* Common */,
 				C47479E92C23167600D421D7 /* Extension */,
 				C47479D62C22CDAB00D421D7 /* Controllers */,
-				C47479BC2C22C1A800D421D7 /* AppDelegate.swift */,
-				C47479BE2C22C1A800D421D7 /* SceneDelegate.swift */,
 				C47479C52C22C1A900D421D7 /* Assets.xcassets */,
 				C47479C72C22C1A900D421D7 /* LaunchScreen.storyboard */,
 				C47479CA2C22C1A900D421D7 /* Info.plist */,
@@ -100,7 +119,7 @@
 		C47479D62C22CDAB00D421D7 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				C47479C02C22C1A800D421D7 /* MainViewController.swift */,
+				C44DDC662C42B1260019E549 /* Main */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -215,6 +234,7 @@
 				C47479EB2C23169600D421D7 /* UILabel+Extension.swift in Sources */,
 				C47479E82C2308F800D421D7 /* Weather.swift in Sources */,
 				C47479C12C22C1A800D421D7 /* MainViewController.swift in Sources */,
+				C44DDC652C42B1230019E549 /* MainView.swift in Sources */,
 				C47479ED2C23183900D421D7 /* UIView+Extension.swift in Sources */,
 				C47479BD2C22C1A800D421D7 /* AppDelegate.swift in Sources */,
 				C47479D52C22CC7C00D421D7 /* API.swift in Sources */,
