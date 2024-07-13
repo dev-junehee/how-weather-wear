@@ -12,174 +12,40 @@ import Alamofire
 import Kingfisher
 import SnapKit
 
-class MainViewController: UIViewController {
+class MainViewController: BaseViewController {
     
-    let background = UIImageView()
-    
-    let titleLabel = UILabel()
-    let locationLabel = UILabel()
-    let tempLabel = UILabel()
-    
-    let subInfoStack = UIStackView()
-    let tempMaxMinLabel = UILabel()
-    let icon = UIImageView()
-    
-    let mapBackgroundView = UIView()
-    let mapLabel = UILabel()
-    let mapView = MKMapView()
+    private let mainView = MainView()
 
     let locationManager = CLLocationManager()
+    
+    override func loadView() {
+        view = mainView
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         checkDeviceLocationAuthorization()
-        
-        configureHierarchy()
-        configureLayout()
-        configureUI()
     }
     
-    private func configureHierarchy() {
-        let infoSubViews = [tempMaxMinLabel, icon]
-        infoSubViews.forEach {
-            subInfoStack.addArrangedSubview($0)
-        }
-        
-        let mapSubViews = [mapLabel, mapView]
-        mapSubViews.forEach {
-            mapBackgroundView.addSubview($0)
-        }
-        
-        let subViews = [
-            background, titleLabel, locationLabel,
-            tempLabel, subInfoStack, mapBackgroundView
-        ]
-        subViews.forEach {
-            view.addSubview($0)
-        }
-        
+    
+    override func configureViewController() {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         
-        mapView.delegate = self
-    }
-    
-    private func configureLayout() {
-        background.snp.makeConstraints {
-            $0.edges.equalTo(view)
-        }
-        
-        titleLabel.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(40)
-            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-            $0.height.equalTo(40)
-        }
-        
-        locationLabel.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(16)
-            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-            $0.height.equalTo(20)
-        }
-        
-        tempLabel.snp.makeConstraints {
-            $0.top.equalTo(locationLabel.snp.bottom).offset(16)
-            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-            $0.height.equalTo(100)
-        }
-        
-        subInfoStack.snp.makeConstraints {
-            $0.top.equalTo(tempLabel.snp.bottom).offset(16)
-            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(24)
-            $0.height.equalTo(120)
-        }
-        subInfoStack.axis = .horizontal
-        
-        tempMaxMinLabel.snp.makeConstraints {
-            $0.verticalEdges.equalTo(subInfoStack)
-            $0.leading.equalTo(subInfoStack.snp.leading)
-        }
-        
-        icon.snp.makeConstraints {
-            $0.leading.equalTo(tempMaxMinLabel.snp.trailing)
-            $0.trailing.equalTo(subInfoStack.snp.trailing)
-            $0.width.equalTo(100)
-        }
-        
-        mapBackgroundView.snp.makeConstraints {
-            $0.top.equalTo(subInfoStack.snp.bottom).offset(16)
-            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(24)
-            $0.bottom.equalTo(view)
-        }
-        
-        mapLabel.snp.makeConstraints {
-            $0.top.equalTo(mapBackgroundView.snp.top).offset(12)
-            $0.horizontalEdges.equalTo(mapBackgroundView).offset(24)
-            $0.height.equalTo(20)
-        }
-        
-        mapView.snp.makeConstraints {
-            $0.top.equalTo(mapLabel.snp.bottom).offset(8)
-            $0.horizontalEdges.bottom.equalTo(mapBackgroundView).inset(16)
-        }
-    }
-
-    private func configureUI() {
-        // 배경
-        let backgroundImage = URL(string: Resource.Images.background)
-        background.kf.setImage(with: backgroundImage)
-        background.contentMode = .scaleAspectFill
-        setBlurEffect(blurEffect: .light, target: background)
-        
-        // 메인 레이블
-        titleLabel.text = Constants.Text.Main.title
-        titleLabel.setShadowText(color: Resource.Colors.white, size: 32, weight: .light)
-        
-        // 위치 레이블
-        locationLabel.setShadowText(color: Resource.Colors.white, size: 16, weight: .semibold)
-        
-        // 현재온도 레이블
-        tempLabel.setShadowText(color: Resource.Colors.white, size: 100, weight: .ultraLight)
-        
-        // 최고+최저온도, 아이콘 스택
-        subInfoStack.setWhiteTransparentBackground()
-        
-        // 최고+최저온도 레이블
-        tempMaxMinLabel.numberOfLines = 0
-        tempMaxMinLabel.setText(color: Resource.Colors.darkGray, size: 16, weight: .medium)
-        
-        // 아이콘 이미지
-        icon.backgroundColor = Resource.Colors.white
-        icon.contentMode = .scaleAspectFit
-        
-        // 지도 백그라운드 뷰
-        mapBackgroundView.setWhiteTransparentBackground()
-        
-        // 지도 뷰 타이틀 텍스트
-        mapLabel.text = Constants.Text.Main.mapLabel
-        mapLabel.font = Resource.Fonts.bold14
-        mapLabel.textColor = Resource.Colors.lightGray
-        
-        // 지도
-        mapView.layer.cornerRadius = 5
+        mainView.mapView.delegate = self
     }
     
     // 현재 위치로 날씨 데이터 받기
     private func configureData(data: WeatherResult) {
-        tempLabel.text = "\(Int(data.main.temp))º"
-        tempMaxMinLabel.text = "오늘 최고 기온은 \(getFormattedDoubleToString(data.main.temp_max))º\n최저 기온은 \(getFormattedDoubleToString(data.main.temp_min))º 입니다"
+        mainView.tempLabel.text = "\(Int(data.main.temp))º"
+        mainView.tempMaxMinLabel.text = "오늘 최고 기온은 \(getFormattedDoubleToString(data.main.temp_max))º\n최저 기온은 \(getFormattedDoubleToString(data.main.temp_min))º 입니다"
         let iconImage = URL(string: "\(API.Weather.IMG)\(data.weather[0].icon)@2x.png")
-        self.icon.kf.setImage(with: iconImage)
+        mainView.icon.kf.setImage(with: iconImage)
     }
     
     
-    // 배경 흐림 설정
-    private func setBlurEffect(blurEffect: UIBlurEffect.Style, target: UIView) {
-        let blurEffect = UIBlurEffect(style: blurEffect)
-        let effectView = UIVisualEffectView(effect: blurEffect)
-        effectView.frame = view.bounds
-        target.addSubview(effectView)
-    }
+    
 }
 
 
@@ -240,7 +106,7 @@ extension MainViewController {
     // 지도에 현재 위치 표시
     func setRegionAndAnnotation(center: CLLocationCoordinate2D) {
         let region = MKCoordinateRegion(center: center, latitudinalMeters: 500, longitudinalMeters: 500)
-        mapView.setRegion(region, animated: true)
+        mainView.mapView.setRegion(region, animated: true)
     }
     
     // OpenWeather API
@@ -285,7 +151,7 @@ extension MainViewController: CLLocationManagerDelegate {
                     print("placemarks 주소 정보 오류")
                     return
                 }
-                self.locationLabel.text = "\(city), \(subLocality)"
+                self.mainView.locationLabel.text = "\(city), \(subLocality)"
             }
             
             // 지도에 위도.경도 세팅
