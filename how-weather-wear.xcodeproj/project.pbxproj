@@ -33,7 +33,6 @@
 		C47479C82C22C1A900D421D7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C47479CA2C22C1A900D421D7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C47479D02C22C1EC00D421D7 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
-		C47479D22C22C1F800D421D7 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		C47479D42C22CC7C00D421D7 /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		C47479D92C22D6A000D421D7 /* Resource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resource.swift; sourceTree = "<group>"; };
 		C47479E12C22DBF000D421D7 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -59,7 +58,6 @@
 		C47479B02C22C1A800D421D7 = {
 			isa = PBXGroup;
 			children = (
-				C47479D22C22C1F800D421D7 /* README.md */,
 				C47479D02C22C1EC00D421D7 /* .gitignore */,
 				C47479BB2C22C1A800D421D7 /* how-weather-wear */,
 				C47479BA2C22C1A800D421D7 /* Products */,
