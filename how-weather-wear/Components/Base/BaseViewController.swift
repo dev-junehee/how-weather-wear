@@ -24,7 +24,7 @@ class BaseViewController: UIViewController {
     func configureLayout() { }
     
     func configureUI() {
-        view.backgroundColor = Resource.Colors.white
+        view.backgroundColor = .white
     }
     
 }

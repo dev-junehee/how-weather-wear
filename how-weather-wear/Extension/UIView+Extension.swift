@@ -8,10 +8,19 @@
 import UIKit
 
 extension UIView {
+    
     func setWhiteTransparentBackground() {
         self.backgroundColor = .init(_colorLiteralRed: 1, green: 1, blue: 1, alpha: 0.5)
         self.isOpaque = true
         self.clipsToBounds = true
         self.layer.cornerRadius = 10
     }
+    
+    func setBlurEffect(blurEffect: UIBlurEffect.Style) {
+        let blurEffect = UIBlurEffect(style: blurEffect)
+        let effectView = UIVisualEffectView(effect: blurEffect)
+        effectView.frame = self.bounds
+        self.addSubview(effectView)
+    }
+    
 }

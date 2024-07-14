@@ -8,150 +8,91 @@
 import UIKit
 import MapKit
 
+import SnapKit
+
 final class MainView: BaseView {
     
-    let background = UIImageView()
+    let scrollView = UIScrollView()
     
-    let titleLabel = UILabel()
+    let mainView = UIView()
+    
     let locationLabel = UILabel()
     let tempLabel = UILabel()
-    
-    let subInfoStack = UIStackView()
+    let weatherLabel = UILabel()
     let tempMaxMinLabel = UILabel()
-    let icon = UIImageView()
     
-    let mapBackgroundView = UIView()
-    let mapLabel = UILabel()
-    let mapView = MKMapView()
+    let tableView = UITableView()
     
     override func configureViewHierarchy() {
-        let infoSubViews = [tempMaxMinLabel, icon]
-        infoSubViews.forEach {
-            subInfoStack.addArrangedSubview($0)
-        }
-        
-        let mapSubViews = [mapLabel, mapView]
-        mapSubViews.forEach {
-            mapBackgroundView.addSubview($0)
-        }
-        
-        let subViews = [
-            background, titleLabel, locationLabel,
-            tempLabel, subInfoStack, mapBackgroundView
-        ]
+        let subViews = [locationLabel, tempLabel, weatherLabel, tempMaxMinLabel]
         subViews.forEach {
-            self.addSubview($0)
+            mainView.addSubview($0)
         }
         
+        let subScrollViews = [mainView, tableView]
+        subScrollViews.forEach {
+            scrollView.addSubview($0)
+        }
         
+        self.addSubview(scrollView)
     }
     
     override func configureViewLayout() {
-        background.snp.makeConstraints {
-            $0.edges.equalTo(self)
+        scrollView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
         
-        titleLabel.snp.makeConstraints {
-            $0.top.equalTo(self.safeAreaLayoutGuide).offset(40)
-            $0.horizontalEdges.equalTo(self.safeAreaLayoutGuide)
-            $0.height.equalTo(40)
+        mainView.snp.makeConstraints {
+            
+            
+            $0.top.horizontalEdges.equalTo(self.safeAreaLayoutGuide)
+            $0.height.equalTo(400)
+            $0.bottom.equalTo(tableView.snp.top)
         }
         
         locationLabel.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(16)
-            $0.horizontalEdges.equalTo(self.safeAreaLayoutGuide)
-            $0.height.equalTo(20)
+            $0.top.centerX.equalTo(self.safeAreaLayoutGuide)
         }
         
         tempLabel.snp.makeConstraints {
-            $0.top.equalTo(locationLabel.snp.bottom).offset(16)
-            $0.horizontalEdges.equalTo(self.safeAreaLayoutGuide)
-            $0.height.equalTo(100)
+            $0.top.equalTo(locationLabel.snp.bottom)
+            $0.centerX.equalTo(self.safeAreaLayoutGuide)
         }
         
-        subInfoStack.snp.makeConstraints {
-            $0.top.equalTo(tempLabel.snp.bottom).offset(16)
-            $0.horizontalEdges.equalTo(self.safeAreaLayoutGuide).inset(24)
-            $0.height.equalTo(120)
+        weatherLabel.snp.makeConstraints {
+            $0.top.equalTo(tempLabel.snp.bottom)
+            $0.centerX.equalTo(self.safeAreaLayoutGuide)
         }
-        subInfoStack.axis = .horizontal
         
         tempMaxMinLabel.snp.makeConstraints {
-            $0.verticalEdges.equalTo(subInfoStack)
-            $0.leading.equalTo(subInfoStack.snp.leading)
+            $0.top.equalTo(weatherLabel.snp.bottom)
+            $0.centerX.equalTo(self.safeAreaLayoutGuide)
         }
         
-        icon.snp.makeConstraints {
-            $0.leading.equalTo(tempMaxMinLabel.snp.trailing)
-            $0.trailing.equalTo(subInfoStack.snp.trailing)
-            $0.width.equalTo(100)
-        }
-        
-        mapBackgroundView.snp.makeConstraints {
-            $0.top.equalTo(subInfoStack.snp.bottom).offset(16)
-            $0.horizontalEdges.equalTo(self.safeAreaLayoutGuide).inset(24)
-            $0.bottom.equalTo(self)
-        }
-        
-        mapLabel.snp.makeConstraints {
-            $0.top.equalTo(mapBackgroundView.snp.top).offset(12)
-            $0.horizontalEdges.equalTo(mapBackgroundView).offset(24)
-            $0.height.equalTo(20)
-        }
-        
-        mapView.snp.makeConstraints {
-            $0.top.equalTo(mapLabel.snp.bottom).offset(8)
-            $0.horizontalEdges.bottom.equalTo(mapBackgroundView).inset(16)
+        tableView.snp.makeConstraints {
+            $0.top.equalTo(mainView.snp.bottom).offset(20)
+            $0.height.equalTo(1000)
+            $0.horizontalEdges.equalTo(self.safeAreaLayoutGuide)
         }
     }
 
     override func configureViewUI() {
-        // 배경
-        let backgroundImage = URL(string: Resource.Images.background)
-        background.kf.setImage(with: backgroundImage)
-        background.contentMode = .scaleAspectFill
-        setBlurEffect(blurEffect: .light, target: background)
+        // 확인용 임시 데이터
+        scrollView.backgroundColor = .systemPink
         
-        // 메인 레이블
-        titleLabel.text = Constants.Text.Main.title
-        titleLabel.setShadowText(color: Resource.Colors.white, size: 32, weight: .light)
+        mainView.backgroundColor = .lightGray
         
-        // 위치 레이블
-        locationLabel.setShadowText(color: Resource.Colors.white, size: 16, weight: .semibold)
+        locationLabel.font = .systemFont(ofSize: 40, weight: .light)
+        tempLabel.font = .systemFont(ofSize: 80, weight: .light)
+        weatherLabel.font = .systemFont(ofSize: 20, weight: .regular)
+        tempMaxMinLabel.font = .systemFont(ofSize: 20, weight: .regular)
         
-        // 현재온도 레이블
-        tempLabel.setShadowText(color: Resource.Colors.white, size: 100, weight: .ultraLight)
+        locationLabel.text = "Jeju City"
+        tempLabel.text = "24.7º"
+        weatherLabel.text = "Broken Clouds"
+        tempMaxMinLabel.text = "최고 : 7.0º | 최저 : -4.2º"
         
-        // 최고+최저온도, 아이콘 스택
-        subInfoStack.setWhiteTransparentBackground()
-        
-        // 최고+최저온도 레이블
-        tempMaxMinLabel.numberOfLines = 0
-        tempMaxMinLabel.setText(color: Resource.Colors.darkGray, size: 16, weight: .medium)
-        
-        // 아이콘 이미지
-        icon.backgroundColor = Resource.Colors.white
-        icon.contentMode = .scaleAspectFit
-        
-        // 지도 백그라운드 뷰
-        mapBackgroundView.setWhiteTransparentBackground()
-        
-        // 지도 뷰 타이틀 텍스트
-        mapLabel.text = Constants.Text.Main.mapLabel
-        mapLabel.font = Resource.Fonts.bold14
-        mapLabel.textColor = Resource.Colors.lightGray
-        
-        // 지도
-        mapView.layer.cornerRadius = 5
+        tableView.backgroundColor = .blue
     }
-}
-
-extension MainView {
-    // 배경 흐림 설정
-    private func setBlurEffect(blurEffect: UIBlurEffect.Style, target: UIView) {
-        let blurEffect = UIBlurEffect(style: blurEffect)
-        let effectView = UIVisualEffectView(effect: blurEffect)
-        effectView.frame = self.bounds
-        target.addSubview(effectView)
-    }
+    
 }

@@ -10,6 +10,8 @@
 		C44DDC652C42B1230019E549 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C44DDC642C42B1230019E549 /* MainView.swift */; };
 		C44DDC6B2C42B18E0019E549 /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C44DDC6A2C42B18E0019E549 /* BaseView.swift */; };
 		C44DDC6D2C42B1960019E549 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C44DDC6C2C42B1960019E549 /* BaseViewController.swift */; };
+		C44DDC6F2C42B6E80019E549 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C44DDC6E2C42B6E80019E549 /* MainViewModel.swift */; };
+		C44DDC722C42B7940019E549 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C44DDC712C42B7940019E549 /* APIManager.swift */; };
 		C47479BD2C22C1A800D421D7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47479BC2C22C1A800D421D7 /* AppDelegate.swift */; };
 		C47479BF2C22C1A800D421D7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47479BE2C22C1A800D421D7 /* SceneDelegate.swift */; };
 		C47479C12C22C1A800D421D7 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47479C02C22C1A800D421D7 /* MainViewController.swift */; };
@@ -31,6 +33,8 @@
 		C44DDC642C42B1230019E549 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		C44DDC6A2C42B18E0019E549 /* BaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseView.swift; sourceTree = "<group>"; };
 		C44DDC6C2C42B1960019E549 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		C44DDC6E2C42B6E80019E549 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		C44DDC712C42B7940019E549 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		C47479B92C22C1A800D421D7 /* how-weather-wear.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "how-weather-wear.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C47479BC2C22C1A800D421D7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C47479BE2C22C1A800D421D7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -75,6 +79,7 @@
 			children = (
 				C47479C02C22C1A800D421D7 /* MainViewController.swift */,
 				C44DDC642C42B1230019E549 /* MainView.swift */,
+				C44DDC6E2C42B6E80019E549 /* MainViewModel.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -94,6 +99,14 @@
 				C44DDC6C2C42B1960019E549 /* BaseViewController.swift */,
 			);
 			path = Base;
+			sourceTree = "<group>";
+		};
+		C44DDC702C42B78D0019E549 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				C44DDC712C42B7940019E549 /* APIManager.swift */,
+			);
+			path = Managers;
 			sourceTree = "<group>";
 		};
 		C47479B02C22C1A800D421D7 = {
@@ -116,8 +129,9 @@
 		C47479BB2C22C1A800D421D7 /* how-weather-wear */ = {
 			isa = PBXGroup;
 			children = (
-				C44DDC672C42B1770019E549 /* Components */,
 				C44DDC632C42AFCD0019E549 /* Application */,
+				C44DDC702C42B78D0019E549 /* Managers */,
+				C44DDC672C42B1770019E549 /* Components */,
 				C47479E62C2308EE00D421D7 /* Model */,
 				C47479D32C22CC6F00D421D7 /* API */,
 				C47479D82C22D68A00D421D7 /* Common */,
@@ -258,10 +272,12 @@
 				C47479C12C22C1A800D421D7 /* MainViewController.swift in Sources */,
 				C44DDC652C42B1230019E549 /* MainView.swift in Sources */,
 				C47479ED2C23183900D421D7 /* UIView+Extension.swift in Sources */,
+				C44DDC6F2C42B6E80019E549 /* MainViewModel.swift in Sources */,
 				C44DDC6D2C42B1960019E549 /* BaseViewController.swift in Sources */,
 				C47479BD2C22C1A800D421D7 /* AppDelegate.swift in Sources */,
 				C47479D52C22CC7C00D421D7 /* API.swift in Sources */,
 				C47479DA2C22D6A000D421D7 /* Resource.swift in Sources */,
+				C44DDC722C42B7940019E549 /* APIManager.swift in Sources */,
 				C47479BF2C22C1A800D421D7 /* SceneDelegate.swift in Sources */,
 				C44DDC6B2C42B18E0019E549 /* BaseView.swift in Sources */,
 				C47479E22C22DBF000D421D7 /* Constants.swift in Sources */,
